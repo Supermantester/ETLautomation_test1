@@ -1,0 +1,37 @@
+import pytest
+import pandas as pd
+
+@pytest.fixture
+def df_src():
+    src_read = pd.read_csv('C:\\Users\\Harsha G\\AppData\\Local\\Programs\\Python\\Python310\\Etl automation sample data\\source_data.csv')
+    return pd.DataFrame(src_read)
+
+@pytest.fixture
+def df_tgt():
+    tgt_read = pd.read_csv('C:\\Users\\Harsha G\\AppData\\Local\\Programs\\Python\\Python310\\Etl automation sample data\\target_data.csv')
+    return pd.DataFrame(tgt_read)
+
+
+def test_row_count(df_src, df_tgt):
+    source_count = df_src.shape[0]
+    target_count = df_tgt.shape[0]
+    print(f"Source row count: {source_count}")
+    print(f"Target row count: {target_count}")
+
+    assert source_count == target_count , 'row count missmatch b/n src & tgt'
+
+def test_duplicate_rec(df_src):
+    dup = df_src.duplicated().sum()
+    print(f'the duplicate values in the src is {dup}')
+
+    assert dup == 0,'Yes duplicate present in source'
+
+def test_missing_values(df_src,df_tgt):
+    src_missing = df_src[df_src['Name'].isnull()]
+    tgt_missing = df_tgt[df_tgt['Name'].isnull()]
+    print(src_missing)
+    print(tgt_missing)
+    assert src_missing.equals(tgt_missing), 'null is there'
+
+
+
